@@ -21,7 +21,7 @@
 
 3. Switch to Release if this is'nt Selected as Default
 
-4. go to settings.h and configure to your likeings (Webhook is optional)
+4. go to settings.h (Reboot/Public) and configure to your likeings (Webhook is optional)
 
 5. Build it..
 
