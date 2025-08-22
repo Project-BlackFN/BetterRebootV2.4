@@ -20,6 +20,7 @@
 #include "discord.h"
 #include "BuildingGameplayActorSpawnMachine.h"
 #include "BP_IslandScripting.h"
+#include "BetterMomentum.h"
 
 #include "vehicles.h"
 #include "globals.h"
@@ -187,10 +188,18 @@ void AFortGameModeAthena::StartAircraftPhase()
 	{
 		static void (*StartAircraftPhaseOriginal)(AFortGameModeAthena*, bool bDoNotSpawnAircraft) = decltype(StartAircraftPhaseOriginal)(Addresses::StartAircraftPhase);
 		StartAircraftPhaseOriginal(this, false); // love the double negative Fortnite
+		SetJoinState(false);
+		StopHeartbeat();
+		SendHeartbeat();
+		StartHeartbeat();
 	}
 	else
 	{
 		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), L"startaircraft", nullptr);
+		SetJoinState(false);
+		StopHeartbeat();
+		SendHeartbeat();
+		StartHeartbeat();
 	}
 }
 

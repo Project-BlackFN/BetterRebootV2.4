@@ -4,6 +4,7 @@
 #include "Actor.h"
 
 #include "reboot.h"
+#include "BetterMomentum.h"
 
 AWorldSettings* UWorld::K2_GetWorldSettings()
 {
@@ -95,6 +96,16 @@ void UWorld::Listen()
 	}
 
 	LOG_INFO(LogNet, "Listening on port {}!", Port + Globals::AmountOfListens - 1);
+
+	SetGamePort(Port + Globals::AmountOfListens - 1);
+
+	std::string PlaylistNameFinal = PlaylistName;
+	SetGamePlaylist(PlaylistNameFinal.c_str());
+
+	RegisterServer();
+
+	SendHeartbeat();
+	StartHeartbeat();
 }
 
 AWorldSettings* UWorld::GetWorldSettings(const bool bCheckStreamingPersistent, const bool bChecked) const

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <curl/curl.h>
+#include "BetterMomentum.h"
 
 class DiscordWebhook {
 public:
@@ -75,7 +76,7 @@ private:
 
 namespace Information
 {
-    static std::string UptimeWebHook = ("");
+    static std::string UptimeWebHook = GetWebhookUptimeUrl();
 }
 
 static DiscordWebhook UptimeWebHook(Information::UptimeWebHook.c_str());

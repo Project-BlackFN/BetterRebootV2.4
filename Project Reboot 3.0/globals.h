@@ -9,7 +9,7 @@ namespace Globals
 	extern inline bool bCreative = false;
 	extern inline bool bGoingToPlayEvent = false;
 	extern inline bool bEnableAGIDs = true;
-	extern inline bool bNoMCP = true;
+	extern inline bool bNoMCP = false;
 	extern inline bool bLogProcessEvent = false;
 	// extern inline bool bLateGame = false;
 	extern inline std::atomic<bool> bLateGame(false);
@@ -23,7 +23,7 @@ namespace Globals
 	extern inline bool bStartedListening = false;
 	extern inline bool bAutoRestart = false; // doesnt work fyi
 	extern inline bool bFillVendingMachines = true;
-	extern inline bool bPrivateIPsAreOperator = true;
+	extern inline bool bPrivateIPsAreOperator = false;
 	extern inline int AmountOfListens = 0; // TODO: Switch to this for LastNum
 	extern inline bool bDeveloperMode = false;
 }
