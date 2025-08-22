@@ -21,7 +21,7 @@
 
 2. Open it with Visual Studio 2022
 
-3. Switch to Release if this is'nt Selected as Default
+3. Switch to Release (x64) if this is'nt Selected as Default
 
 4. go to settings.h (Reboot/Public) and configure to your likeings (Webhook is optional)
 
