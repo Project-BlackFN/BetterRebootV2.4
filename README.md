@@ -19,7 +19,7 @@
 
 1. Download this Project via git clone or Code Button
 
-2. Open it with Visual Studio 2022
+2. Open it with Visual Studio 2022 (you must have installed the Desktop Development Pack C++)
 
 3. Switch to Release (x64) if this is'nt Selected as Default
 
