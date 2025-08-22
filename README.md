@@ -2,6 +2,8 @@
 
 **Version: 2.4**
 
+**Original Project by [Milxnor](https://github.com/Milxnor) - [Project Reboot 3.0](https://github.com/Milxnor/Project-Reboot-3.0)
+
 #
 
 **This Gameserver is an extension of [BetterMomentum](https://github.com/Project-BlackFN/BetterMomentum) because of this is an Extension of [BetterMomentum](https://github.com/Project-BlackFN/BetterMomentum) u should only use it if u have BetterMomentum**
