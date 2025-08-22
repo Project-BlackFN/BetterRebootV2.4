@@ -2,7 +2,7 @@
 
 **Version: 2.4**
 
-**Original Project by [Milxnor](https://github.com/Milxnor) - [Project Reboot 3.0](https://github.com/Milxnor/Project-Reboot-3.0)
+**Original Project by [Milxnor](https://github.com/Milxnor) - [Project Reboot 3.0](https://github.com/Milxnor/Project-Reboot-3.0)**
 
 #
 
