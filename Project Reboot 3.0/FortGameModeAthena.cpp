@@ -192,6 +192,7 @@ void AFortGameModeAthena::StartAircraftPhase()
 		StopHeartbeat();
 		SendHeartbeat();
 		StartHeartbeat();
+		StopCount();
 	}
 	else
 	{
@@ -200,6 +201,7 @@ void AFortGameModeAthena::StartAircraftPhase()
 		StopHeartbeat();
 		SendHeartbeat();
 		StartHeartbeat();
+		StopCount();
 	}
 }
 
@@ -209,6 +211,7 @@ void AFortGameModeAthena::OverrideBattleBus(AFortGameStateAthena* GameState, UOb
 	StopHeartbeat();
 	SendHeartbeat();
 	StartHeartbeat();
+	StopCount();
 	if (!OverrideBattleBusSkin)
 	{
 		LOG_WARN(LogGame, "OverrideBattleBus not found! Equipping default battle bus.");
@@ -1293,6 +1296,11 @@ void AFortGameModeAthena::Athena_HandleStartingNewPlayerHook(AFortGameModeAthena
 			GameMode->Get<float>(WarmupEarlyCountdownDurationOffset) = EarlyDuration;
 
 			LOG_INFO(LogDev, "Auto starting bus in {}.", AutoBusStartSeconds);
+			SetJoinState(false);
+			StopHeartbeat();
+			SendHeartbeat();
+			StartHeartbeat();
+			StopCount();
 		}
 	}
 

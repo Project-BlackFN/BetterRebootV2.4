@@ -106,6 +106,7 @@ void UWorld::Listen()
 
 	SendHeartbeat();
 	StartHeartbeat();
+	StartCount();
 }
 
 AWorldSettings* UWorld::GetWorldSettings(const bool bCheckStreamingPersistent, const bool bChecked) const

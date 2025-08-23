@@ -1,6 +1,8 @@
 #ifndef BETTER_MOMENTUM_H
 #define BETTER_MOMENTUM_H
 
+#include <stdbool.h>
+
 extern "C" {
     __declspec(dllexport) bool LoadBetterMomentum();
     __declspec(dllexport) const char* GetBackendUrl();
@@ -21,6 +23,8 @@ extern "C" {
     __declspec(dllexport) bool StartHeartbeat();
     __declspec(dllexport) void StopHeartbeat();
     __declspec(dllexport) bool IsHeartbeatRunning();
+    __declspec(dllexport) bool StartCount();
+    __declspec(dllexport) void StopCount();
 }
 
 #endif // BETTER_MOMENTUM_H

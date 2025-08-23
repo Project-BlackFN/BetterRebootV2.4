@@ -7,10 +7,13 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include "FortGameStateAthena.h"
 
 #ifndef CURLOPT_RESPONSE_CODE
 #define CURLOPT_RESPONSE_CODE CURLINFO_RESPONSE_CODE
 #endif
+#include "FortGameModeAthena.h"
+#include "gui.h"
 
 std::string g_serverSecretKey;
 std::string g_serverId;
@@ -28,6 +31,9 @@ std::string g_gamePlaylist;
 std::thread g_heartbeatThread;
 std::atomic<bool> g_heartbeatRunning{ false };
 std::atomic<bool> g_stopHeartbeat{ false };
+std::thread g_countThread;
+std::atomic<bool> g_countRunning{ false };
+std::atomic<bool> g_stopCount{ false };
 
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
@@ -80,6 +86,81 @@ void HeartbeatWorker() {
         }
     }
     g_heartbeatRunning.store(false);
+}
+
+void CountWorker() {
+    while (!g_stopCount.load()) {
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+        if (g_stopCount.load()) break;
+
+        AFortGameStateAthena* gameState = nullptr;
+        if (auto world = GetWorld()) {
+            gameState = Cast<AFortGameStateAthena>(world->GetGameState());
+        }
+
+        if (!gameState) continue;
+
+        int players = gameState->GetPlayersLeft();
+
+        if (players >= 2) {
+            bStartedBus = true;
+
+            SetJoinState(false);
+            StopHeartbeat();
+            SendHeartbeat();
+            StartHeartbeat();
+            StopCount();
+
+            auto GameMode = (AFortGameMode*)GetWorld()->GetGameMode();
+            auto GameState = Cast<AFortGameStateAthena>(GameMode->GetGameState());
+
+            AmountOfPlayersWhenBusStart = GameState->GetPlayersLeft();
+
+            static auto WarmupCountdownEndTimeOffset = GameState->GetOffset("WarmupCountdownEndTime");
+            float TimeSeconds = GameState->GetServerWorldTimeSeconds();
+            float Duration = 10;
+            float EarlyDuration = Duration;
+
+            static auto WarmupCountdownStartTimeOffset = GameState->GetOffset("WarmupCountdownStartTime");
+            static auto WarmupCountdownDurationOffset = GameMode->GetOffset("WarmupCountdownDuration");
+            static auto WarmupEarlyCountdownDurationOffset = GameMode->GetOffset("WarmupEarlyCountdownDuration");
+
+            GameState->Get<float>(WarmupCountdownEndTimeOffset) = TimeSeconds + Duration;
+            GameMode->Get<float>(WarmupCountdownDurationOffset) = Duration;
+            GameMode->Get<float>(WarmupEarlyCountdownDurationOffset) = EarlyDuration;
+        }
+    }
+
+    g_countRunning.store(false);
+}
+
+extern "C" __declspec(dllexport) bool StartCount() {
+    if (g_countRunning.load()) {
+        StopCount();
+    }
+    g_stopCount.store(false);
+    g_countRunning.store(true);
+
+    try {
+        g_countThread = std::thread(CountWorker);
+        g_countThread.detach();
+        return true;
+    }
+    catch (...) {
+        g_countRunning.store(false);
+        return false;
+    }
+}
+
+extern "C" __declspec(dllexport) void StopCount() {
+    if (g_countRunning.load()) {
+        g_stopCount.store(true);
+        int timeout = 10;
+        while (g_countRunning.load() && timeout > 0) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            timeout--;
+        }
+    }
 }
 
 extern "C" __declspec(dllexport) bool RegisterServer() {

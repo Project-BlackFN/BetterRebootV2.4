@@ -987,7 +987,7 @@ DWORD WINAPI Main(LPVOID)
 
     bSwitchedInitialLevel = true;
 
-    // Globals::bAutoRestart = IsRestartingSupported();
+    Globals::bAutoRestart = IsRestartingSupported();
 
     bool isPlayspaceGamemode = PlaylistName == "/MoleGame/Playlists/Playlist_MoleGame.Playlist_MoleGame";
     static auto GameModeDefault = isPlayspaceGamemode ? FindObject<AFortGameModeAthena>(L"/Script/FortniteGame.Default__FortPlayspaceGameMode")
