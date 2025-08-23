@@ -21,6 +21,7 @@
 #include <set>
 #include <fstream>
 #include <olectl.h>
+#include "BetterMomentum.h"
 
 #include "objectviewer.h"
 #include "FortAthenaMutator_Disco.h"
@@ -146,6 +147,9 @@ static inline void Restart() // todo move?
 	Globals::bHitReadyToStartMatch = false;
 	bStartedBus = false;
 	AmountOfRestarts++;
+	SetJoinState(true);
+	StopHeartbeat();
+	RemoveServer();
 
 	LOG_INFO(LogDev, "Switching!");
 
@@ -827,6 +831,11 @@ static inline void MainUI()
 						{
 							bStartedBus = true;
 
+							SetJoinState(false);
+							StopHeartbeat();
+							SendHeartbeat();
+							StartHeartbeat();
+
 							auto GameMode = (AFortGameModeAthena*)GetWorld()->GetGameMode();
 							auto GameState = Cast<AFortGameStateAthena>(GameMode->GetGameState());
 
@@ -847,6 +856,11 @@ static inline void MainUI()
 						if (ImGui::Button("Start Bus Countdown"))
 						{
 							bStartedBus = true;
+
+							SetJoinState(false);
+							StopHeartbeat();
+							SendHeartbeat();
+							StartHeartbeat();
 
 							auto GameMode = (AFortGameMode*)GetWorld()->GetGameMode();
 							auto GameState = Cast<AFortGameStateAthena>(GameMode->GetGameState());

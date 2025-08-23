@@ -205,6 +205,10 @@ void AFortGameModeAthena::StartAircraftPhase()
 
 void AFortGameModeAthena::OverrideBattleBus(AFortGameStateAthena* GameState, UObject* OverrideBattleBusSkin)
 {
+	SetJoinState(false);
+	StopHeartbeat();
+	SendHeartbeat();
+	StartHeartbeat();
 	if (!OverrideBattleBusSkin)
 	{
 		LOG_WARN(LogGame, "OverrideBattleBus not found! Equipping default battle bus.");
@@ -324,6 +328,7 @@ void SetupEverythingAI() // find better name lol
 bool AFortGameModeAthena::Athena_ReadyToStartMatchHook(AFortGameModeAthena* GameMode)
 {
 	Globals::bHitReadyToStartMatch = true;
+
 
 	auto GameState = GameMode->GetGameStateAthena();
 
