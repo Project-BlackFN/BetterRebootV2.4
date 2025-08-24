@@ -98,6 +98,17 @@ void UWorld::Listen()
 	}
 
 	LOG_INFO(LogNet, "Listening on port {}!", Port + Globals::AmountOfListens - 1);
+
+	SetGamePort(Port + Globals::AmountOfListens - 1);
+
+	std::string PlaylistNameFinal = PlaylistName;
+	SetGamePlaylist(PlaylistNameFinal.c_str());
+
+	RegisterServer();
+
+	SendHeartbeat();
+	StartHeartbeat();
+	StartCount();
 }
 
 
