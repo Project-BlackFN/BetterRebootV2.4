@@ -25,7 +25,8 @@
 
 4. go to Reboot/Public and add the File "settings.h" paste this into it:
 
-´´´
+```
+
 #pragma once
 #include <string>
 
@@ -35,7 +36,7 @@ inline std::string WEBHOOK_UPTIME_URL = "";
 inline std::string PUBLIC_IP = "PUBLIC IP OF GS";
 #pragma once
 
-´´´
+```
 
 5. Build it.. (rightclick on BetterRebootV2.4 and choose Rebuild)
 
