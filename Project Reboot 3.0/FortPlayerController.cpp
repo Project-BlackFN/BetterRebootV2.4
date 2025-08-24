@@ -1678,6 +1678,9 @@ void AFortPlayerController::ClientOnPawnDiedHook(AFortPlayerController* PlayerCo
 				// if (GameState->GetGamePhase() == EAthenaGamePhase::EndGame)
 				if (bDidSomeoneWin)
 				{
+					SetJoinState(true);
+					StopHeartbeat();
+					RemoveServer();
 					CreateThread(0, 0, RestartThread, 0, 0, 0);
 				}
 			}

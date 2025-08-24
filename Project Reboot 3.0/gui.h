@@ -120,23 +120,18 @@ static inline bool HasAnyCalendarModification()
 	return Calendar::HasSnowModification() || Calendar::HasNYE() || Fortnite_Version == 8.40 || std::floor(Fortnite_Version) == 13;
 }
 
+#include <Windows.h>
+
 static inline void Restart()
 {
 	LOG_INFO(LogDev, "Restart() called");
-	// it was formatted like this for debugging purposes..
-	FString LevelA = Engine_Version < 424
-		? TEXT("open Athena_Terrain")
-		: Engine_Version >= 500
-		? (Fortnite_Version >= 23
-			? TEXT("open Asteria_Terrain")
-			: Globals::bCreative ? TEXT("open Creative_NoApollo_Terrain") : TEXT("open Artemis_Terrain"))
-		: Globals::bCreative ? TEXT("open Creative_NoApollo_Terrain") : TEXT("open Apollo_Terrain");
+
 	auto BeaconClass = FindObject<UClass>(TEXT("/Script/FortniteGame.FortOnlineBeaconHost"));
 	if (!BeaconClass)
 	{
 		return;
 	}
-	// im going to tweak
+
 	while (true)
 	{
 		UWorld* World = GetWorld();
@@ -145,13 +140,14 @@ static inline void Restart()
 			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 			continue;
 		}
+
 		TArray<AActor*> AllFortBeacons = UGameplayStatics::GetAllActorsOfClass(World, BeaconClass);
 		int32 NumBeacons = AllFortBeacons.Num();
 		if (NumBeacons == 0)
 		{
 			break;
 		}
-		// this is held on by hopes and prayers dude
+
 		for (int i = 0; i < NumBeacons; ++i)
 		{
 			AActor* Beacon = AllFortBeacons.at(i);
@@ -161,34 +157,17 @@ static inline void Restart()
 			}
 			Beacon = NULL;
 		}
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
+
 	Globals::bInitializedPlaylist = false;
 	Globals::bStartedListening = false;
 	Globals::bHitReadyToStartMatch = false;
 	bStartedBus = false;
 	AmountOfRestarts++;
-	SetJoinState(true);
-	StopHeartbeat();
-	RemoveServer();
-	StopCount();
 
-	// only part of the code i truly believe works properly
-	while (true)
-	{
-		UWorld* World = GetWorld();
-		if (!World)
-		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
-			continue;
-		}
-		if (LevelA.IsValid())
-		{
-			UKismetSystemLibrary::ExecuteConsoleCommand(World, LevelA, nullptr);
-			break;
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
-	}
+	ExitProcess(0);
 }
 
 static inline std::string wstring_to_utf8(const std::wstring& str)
@@ -339,7 +318,7 @@ static inline void StaticUI()
 {
 	if (IsRestartingSupported())
 	{
-		//ImGui::Checkbox("Auto Restart", &Globals::bAutoRestart);
+		ImGui::Checkbox("Auto Restart", &Globals::bAutoRestart);
 
 		if (Globals::bAutoRestart)
 		{

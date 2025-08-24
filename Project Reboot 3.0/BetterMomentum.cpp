@@ -102,37 +102,15 @@ void CountWorker() {
 
         int players = gameState->GetPlayersLeft();
 
-        if (players >= 2) {
-            bStartedBus = true;
-
-            SetJoinState(false);
-            StopHeartbeat();
-            SendHeartbeat();
-            StartHeartbeat();
+        if (players == 100) {
             StopCount();
-
-            auto GameMode = (AFortGameMode*)GetWorld()->GetGameMode();
-            auto GameState = Cast<AFortGameStateAthena>(GameMode->GetGameState());
-
-            AmountOfPlayersWhenBusStart = GameState->GetPlayersLeft();
-
-            static auto WarmupCountdownEndTimeOffset = GameState->GetOffset("WarmupCountdownEndTime");
-            float TimeSeconds = GameState->GetServerWorldTimeSeconds();
-            float Duration = 10;
-            float EarlyDuration = Duration;
-
-            static auto WarmupCountdownStartTimeOffset = GameState->GetOffset("WarmupCountdownStartTime");
-            static auto WarmupCountdownDurationOffset = GameMode->GetOffset("WarmupCountdownDuration");
-            static auto WarmupEarlyCountdownDurationOffset = GameMode->GetOffset("WarmupEarlyCountdownDuration");
-
-            GameState->Get<float>(WarmupCountdownEndTimeOffset) = TimeSeconds + Duration;
-            GameMode->Get<float>(WarmupCountdownDurationOffset) = Duration;
-            GameMode->Get<float>(WarmupEarlyCountdownDurationOffset) = EarlyDuration;
+            SetJoinState(false);
         }
     }
 
     g_countRunning.store(false);
 }
+
 
 extern "C" __declspec(dllexport) bool StartCount() {
     if (g_countRunning.load()) {
