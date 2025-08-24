@@ -23,7 +23,19 @@
 
 3. Switch to Release (x64) if this is'nt Selected as Default
 
-4. go to settings.h (Reboot/Public) and configure to your likeings (Webhook is optional)
+4. go to Reboot/Public and add the File "settings.h" paste this into it:
+
+´´´
+#pragma once
+#include <string>
+
+inline std::string BACKEND_URL = "https://my.backend:3551";
+inline std::string SERVER_AUTH_KEY = "secretkey123";
+inline std::string WEBHOOK_UPTIME_URL = "";
+inline std::string PUBLIC_IP = "PUBLIC IP OF GS";
+#pragma once
+
+´´´
 
 5. Build it.. (rightclick on BetterRebootV2.4 and choose Rebuild)
 
