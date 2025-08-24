@@ -12,7 +12,7 @@
 
 - Register via. API (PROGRESS: 100%)
 - per Kill 75 V-Bucks (PROGRESS: 0%)
-- Auto Restart (PROGRESS: 0%)
+- Auto Restart (PROGRESS: 100%) - [External Starter](https://github.com/Project-BlackFN/ServerStarter) needed
 
 
 **Installation:**
