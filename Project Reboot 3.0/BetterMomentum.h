@@ -25,6 +25,6 @@ extern "C" {
     __declspec(dllexport) bool IsHeartbeatRunning();
     __declspec(dllexport) bool StartCount();
     __declspec(dllexport) void StopCount();
+    __declspec(dllexport) const char* GetServers();
 }
-
 #endif // BETTER_MOMENTUM_H

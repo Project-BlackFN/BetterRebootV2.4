@@ -75,6 +75,47 @@ std::string ExtractJsonValue(const std::string& json, const std::string& key) {
     return json.substr(startPos, endPos - startPos);
 }
 
+std::string ParseServerList(const std::string& jsonResponse) {
+    std::string result;
+    size_t pos = 0;
+
+    while ((pos = jsonResponse.find("\"ip\":", pos)) != std::string::npos) {
+        size_t ipStart = jsonResponse.find("\"", pos + 5);
+        if (ipStart == std::string::npos) break;
+        ipStart++;
+
+        size_t ipEnd = jsonResponse.find("\"", ipStart);
+        if (ipEnd == std::string::npos) break;
+
+        std::string ip = jsonResponse.substr(ipStart, ipEnd - ipStart);
+
+        if (ip != g_publicIp) {
+            pos = ipEnd;
+            continue;
+        }
+
+        size_t portPos = jsonResponse.find("\"port\":", ipEnd);
+        if (portPos == std::string::npos) break;
+
+        size_t portStart = portPos + 7;
+        size_t portEnd = jsonResponse.find_first_of(",}", portStart);
+        if (portEnd == std::string::npos) break;
+
+        std::string portStr = jsonResponse.substr(portStart, portEnd - portStart);
+
+        portStr.erase(std::remove_if(portStr.begin(), portStr.end(), ::isspace), portStr.end());
+
+        if (!result.empty()) {
+            result += ", ";
+        }
+        result += portStr;
+
+        pos = portEnd;
+    }
+
+    return result;
+}
+
 void HeartbeatWorker() {
     while (!g_stopHeartbeat.load()) {
         for (int i = 0; i < 450 && !g_stopHeartbeat.load(); ++i) {
@@ -139,6 +180,46 @@ extern "C" __declspec(dllexport) void StopCount() {
             timeout--;
         }
     }
+}
+
+extern "C" __declspec(dllexport) const char* GetServers() {
+    static std::string serverList;
+    serverList.clear();
+
+    if (!g_configLoaded) {
+        return nullptr;
+    }
+
+    CURL* curl = curl_easy_init();
+    if (!curl) {
+        return nullptr;
+    }
+
+    std::string readBuffer;
+    std::string url = g_backendUrl + "/bettermomentum/serverlist";
+
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+    curl_easy_setopt(curl, CURLOPT_CAINFO, nullptr);
+    curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+
+    CURLcode res = curl_easy_perform(curl);
+
+    long response_code;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
+    curl_easy_cleanup(curl);
+
+    if (res != CURLE_OK || response_code != 200) {
+        return nullptr;
+    }
+
+    serverList = ParseServerList(readBuffer);
+
+    return serverList.empty() ? nullptr : serverList.c_str();
 }
 
 extern "C" __declspec(dllexport) bool RegisterServer() {
