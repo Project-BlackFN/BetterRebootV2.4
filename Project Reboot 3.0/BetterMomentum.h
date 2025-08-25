@@ -25,6 +25,7 @@ extern "C" {
     __declspec(dllexport) bool IsHeartbeatRunning();
     __declspec(dllexport) bool StartCount();
     __declspec(dllexport) void StopCount();
-    __declspec(dllexport) const char* GetServers();
+    __declspec(dllexport) int GetAvaPort();
 }
+
 #endif // BETTER_MOMENTUM_H

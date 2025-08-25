@@ -182,17 +182,17 @@ extern "C" __declspec(dllexport) void StopCount() {
     }
 }
 
-extern "C" __declspec(dllexport) const char* GetServers() {
+extern "C" __declspec(dllexport) int GetAvaPort() {
     static std::string serverList;
     serverList.clear();
 
-    if (!g_configLoaded) {
-        return nullptr;
+    if (!g_configLoaded) { // useless but idk why I added it
+        return 7777;
     }
 
     CURL* curl = curl_easy_init();
     if (!curl) {
-        return nullptr;
+        return 7777;
     }
 
     std::string readBuffer;
@@ -214,12 +214,34 @@ extern "C" __declspec(dllexport) const char* GetServers() {
     curl_easy_cleanup(curl);
 
     if (res != CURLE_OK || response_code != 200) {
-        return nullptr;
+        return 7777;
     }
 
     serverList = ParseServerList(readBuffer);
 
-    return serverList.empty() ? nullptr : serverList.c_str();
+    if (serverList.empty()) {
+        return 7777;
+    }
+
+    int highestPort = 7777;
+    std::stringstream ss(serverList);
+    std::string portStr;
+
+    while (std::getline(ss, portStr, ',')) {
+        portStr.erase(std::remove_if(portStr.begin(), portStr.end(), ::isspace), portStr.end());
+
+        try {
+            int port = std::stoi(portStr);
+            if (port > highestPort) {
+                highestPort = port;
+            }
+        }
+        catch (...) {
+            continue;
+        }
+    }
+
+    return highestPort + 3; // just for space it's clear but u can remove it
 }
 
 extern "C" __declspec(dllexport) bool RegisterServer() {

@@ -23,7 +23,7 @@ void UWorld::Listen()
 
 	constexpr bool bUseBeacons = true;
 
-	int BaseGamePort = 7777;
+	int BaseGamePort = GetAvaPort();
 	int Port = BaseGamePort - Globals::AmountOfListens + 1;
 
 	if (bUseBeacons)

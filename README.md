@@ -10,9 +10,13 @@
 
 **Features:**
 
-- Register via. API (PROGRESS: 100%)
-- per Kill 75 V-Bucks (PROGRESS: 0%)
-- Auto Restart (PROGRESS: 100%) - [External Starter](https://github.com/Project-BlackFN/ServerStarter) needed
+- Register via. API (PROGRESS: 100%) - [BetterMomentum](https://github.com/Project-BlackFN/BetterMomentum) optional, code changes needed
+
+- per Kill 75 V-Bucks (PROGRESS: 0%) - [BetterMomentum](https://github.com/Project-BlackFN/BetterMomentum) optional, code changes needed
+
+- Auto Restart (PROGRESS: 100%) - [ServerStarter V2](https://github.com/Project-BlackFN/ServerStarter) needed
+
+- Multi Servers (PROGRESS: 50%) - [BetterMomentum](https://github.com/Project-BlackFN/BetterMomentum) needed
 
 
 **Installation:**
