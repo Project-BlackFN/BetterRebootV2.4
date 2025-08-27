@@ -120,8 +120,6 @@ static inline bool HasAnyCalendarModification()
 	return Calendar::HasSnowModification() || Calendar::HasNYE() || Fortnite_Version == 8.40 || std::floor(Fortnite_Version) == 13;
 }
 
-#include <Windows.h>
-
 static inline void Restart()
 {
 	LOG_INFO(LogDev, "Restart() called");

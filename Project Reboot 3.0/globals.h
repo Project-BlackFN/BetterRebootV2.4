@@ -21,7 +21,7 @@ namespace Globals
 	extern inline bool bHitReadyToStartMatch = false;
 	extern inline bool bInitializedPlaylist = false;
 	extern inline bool bStartedListening = false;
-	extern inline bool bAutoRestart = true; // doesnt work fyi
+	extern inline bool bAutoRestart = true; // Auto Restart (only works with ServerStarterV2)
 	extern inline bool bFillVendingMachines = true;
 	extern inline bool bPrivateIPsAreOperator = false;
 	extern inline int AmountOfListens = 0; // TODO: Switch to this for LastNum
@@ -43,3 +43,34 @@ extern inline std::string PlaylistName =
 // "/Game/Athena/Playlists/Ashton/Playlist_Ashton_Sm.Playlist_Ashton_Sm";
 // "/Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab";
 // "/MoleGame/Playlists/Playlist_MoleGame.Playlist_MoleGame"; // very experimental dont use
+
+
+inline void SetPlaylistName(const std::string& NewName)
+{
+	if (NewName.find("Playlist_") == std::string::npos)
+	{
+		// Fallback to Solo if invalid
+		PlaylistName = "/Game/Athena/Playlists/Playlist_DefaultSolo.Playlist_DefaultSolo";
+		return;
+	}
+
+	if (NewName.rfind("/Game/Athena/Playlists/", 0) == 0 &&
+		NewName.find('.') != std::string::npos)
+	{
+		PlaylistName = NewName;
+		return;
+	}
+
+	if (NewName.empty() || NewName.find('/') != std::string::npos || NewName.find('.') != std::string::npos)
+	{
+		// Fallback to Solo if invalid
+		PlaylistName = "/Game/Athena/Playlists/Playlist_DefaultSolo.Playlist_DefaultSolo";
+		return;
+	}
+
+	const std::string Prefix = "/Game/Athena/Playlists/";
+	std::string FullPath = Prefix + NewName + "." + NewName;
+	PlaylistName = FullPath;
+}
+
+
