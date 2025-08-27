@@ -16,7 +16,7 @@
 
 - Auto Restart (PROGRESS: 100%) - [ServerStarter V2](https://github.com/Project-BlackFN/ServerStarter) needed
 
-- Multi Servers (PROGRESS: 50%) - [BetterMomentum](https://github.com/Project-BlackFN/BetterMomentum) needed
+- Multi Servers (PROGRESS: 50%) - [BetterMomentum](https://github.com/Project-BlackFN/BetterMomentum) needed and [ServerStarter V2](https://github.com/Project-BlackFN/ServerStarter) optional, but you need an Implementation for the Multi-Account Setup from [BetterMomentum](https://github.com/Project-BlackFN/BetterMomentum)
 
 
 **Installation:**
