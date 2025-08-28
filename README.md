@@ -45,3 +45,8 @@ inline std::string PUBLIC_IP = "PUBLIC IP OF GS";
 6. now under the Main Folder (where the BetterRebootGS.sln is) should be a x64 Folder in this Folder u go into Release and there u have ur dll to inject
 
 6. Inject it to the Fortnite Process via. Process Hacker or Xenos64 or u just use our [ServerStarter](https://github.com/Project-BlackFN/ServerStarter)
+
+
+# ISSUES
+
+**If you have any Problem with the Gameserver or have a solution to a Code Logic Error feel free to write me on Discord (real.ghost143)**
