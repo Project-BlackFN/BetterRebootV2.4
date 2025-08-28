@@ -164,6 +164,7 @@ static inline void Restart()
 	Globals::bHitReadyToStartMatch = false;
 	bStartedBus = false;
 	AmountOfRestarts++;
+	Sleep(30000); // enough time to leave
 
 	ExitProcess(0);
 }
