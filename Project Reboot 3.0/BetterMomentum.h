@@ -26,6 +26,7 @@ extern "C" {
     __declspec(dllexport) bool StartCount();
     __declspec(dllexport) void StopCount();
     __declspec(dllexport) int GetAvaPort();
+    __declspec(dllexport) const char* GetRequiredPlaylist();
 }
 
 #endif // BETTER_MOMENTUM_H

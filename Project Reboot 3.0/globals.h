@@ -31,7 +31,7 @@ namespace Globals
 extern inline int NumToSubtractFromSquadId = 0; // I think 2?
 
 extern inline std::string PlaylistName =
-"/Game/Athena/Playlists/Playlist_DefaultSolo.Playlist_DefaultSolo";
+"/Game/Athena/Playlists/playlist_defaultsquads.playlist_defaultsquads";
 // "/Game/Athena/Playlists/gg/Playlist_Gg_Reverse.Playlist_Gg_Reverse";
 // "/Game/Athena/Playlists/Playlist_DefaultDuo.Playlist_DefaultDuo";
 // "/Game/Athena/Playlists/Playground/Playlist_Playground.Playlist_Playground";
@@ -45,32 +45,9 @@ extern inline std::string PlaylistName =
 // "/MoleGame/Playlists/Playlist_MoleGame.Playlist_MoleGame"; // very experimental dont use
 
 
-inline void SetPlaylistName(const std::string& NewName)
+inline void SetPlaylistNameX(const std::string& newName)
 {
-	if (NewName.find("Playlist_") == std::string::npos)
-	{
-		// Fallback to Solo if invalid
-		PlaylistName = "/Game/Athena/Playlists/Playlist_DefaultSolo.Playlist_DefaultSolo";
-		return;
-	}
-
-	if (NewName.rfind("/Game/Athena/Playlists/", 0) == 0 &&
-		NewName.find('.') != std::string::npos)
-	{
-		PlaylistName = NewName;
-		return;
-	}
-
-	if (NewName.empty() || NewName.find('/') != std::string::npos || NewName.find('.') != std::string::npos)
-	{
-		// Fallback to Solo if invalid
-		PlaylistName = "/Game/Athena/Playlists/Playlist_DefaultSolo.Playlist_DefaultSolo";
-		return;
-	}
-
-	const std::string Prefix = "/Game/Athena/Playlists/";
-	std::string FullPath = Prefix + NewName + "." + NewName;
-	PlaylistName = FullPath;
+	PlaylistName = newName;
 }
 
 

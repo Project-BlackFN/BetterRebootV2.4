@@ -8,6 +8,7 @@
 #include <chrono>
 #include <atomic>
 #include "FortGameStateAthena.h"
+#include <cstdlib>
 
 #ifndef CURLOPT_RESPONSE_CODE
 #define CURLOPT_RESPONSE_CODE CURLINFO_RESPONSE_CODE
@@ -129,7 +130,11 @@ void HeartbeatWorker() {
     g_heartbeatRunning.store(false);
 }
 
+
+
 void CountWorker() {
+    auto zeroPlayerStart = std::chrono::steady_clock::time_point{};
+
     while (!g_stopCount.load()) {
         std::this_thread::sleep_for(std::chrono::seconds(5));
         if (g_stopCount.load()) break;
@@ -146,6 +151,21 @@ void CountWorker() {
         if (players == 100) {
             StopCount();
             SetJoinState(false);
+        }
+
+        if (players == 0) {
+            if (zeroPlayerStart == std::chrono::steady_clock::time_point{}) {
+                zeroPlayerStart = std::chrono::steady_clock::now();
+            }
+            else {
+                auto elapsed = std::chrono::steady_clock::now() - zeroPlayerStart;
+                if (elapsed >= std::chrono::minutes(3)) {
+                    std::exit(0);
+                }
+            }
+        }
+        else {
+            zeroPlayerStart = std::chrono::steady_clock::time_point{};
         }
     }
 
@@ -392,6 +412,54 @@ extern "C" __declspec(dllexport) void StopHeartbeat() {
             timeout--;
         }
     }
+}
+
+
+extern "C" __declspec(dllexport) const char* GetRequiredPlaylist() {
+    static std::string cachedGamemode;
+    cachedGamemode.clear();
+
+    if (!g_configLoaded) {
+        return nullptr;
+    }
+
+    CURL* curl = curl_easy_init();
+    if (!curl) {
+        return nullptr;
+    }
+
+    std::string readBuffer;
+    std::string url = g_backendUrl + "/bettermomentum/matchmaker/serverInfo";
+
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+    curl_easy_setopt(curl, CURLOPT_CAINFO, nullptr);
+    curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+
+    CURLcode res = curl_easy_perform(curl);
+
+    long response_code;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
+    curl_easy_cleanup(curl);
+
+    if (res != CURLE_OK || response_code != 200) {
+        std::exit(0);
+        return nullptr;
+    }
+
+    std::string gamemode = ExtractJsonValue(readBuffer, "gamemode");
+    if (gamemode.empty() || readBuffer.find("\"gamemode\":null") != std::string::npos) {
+        std::exit(0);
+        return nullptr;
+    }
+
+    cachedGamemode = gamemode;
+    SetPlaylistNameX(cachedGamemode.c_str());
+    return cachedGamemode.c_str();
 }
 
 extern "C" __declspec(dllexport) bool IsHeartbeatRunning() {

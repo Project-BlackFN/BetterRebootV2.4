@@ -1542,8 +1542,9 @@ static inline void PregameUI()
 	}
 
 	ImGui::SliderInt("Players required to start the match", &WarmupRequiredPlayerCount, 1, 100);
-		
+
 	if (!Globals::bCreative)
+		GetRequiredPlaylist();
 		ImGui::InputText("Playlist", &PlaylistName);
 }
 
